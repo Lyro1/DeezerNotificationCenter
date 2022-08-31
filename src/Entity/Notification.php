@@ -19,6 +19,9 @@ class Notification
     #[ORM\Column]
     private ?int $type = null;
 
+    #[ORM\ManyToOne(targetEntity: NotifiableContent::class)]
+    private ?NotifiableContent $content = null;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $emissionDate = null;
 
@@ -52,6 +55,16 @@ class Notification
     public function setType(int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getContent(): ?NotifiableContent {
+        return $this->content;
+    }
+
+    public function setContent(NotifiableContent $content): self {
+        $this->content = $content;
 
         return $this;
     }
