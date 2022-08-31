@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\NotificationRepository;
+use App\Repository\UserNotificationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -34,12 +35,12 @@ class Notification
     #[ORM\Column(length: 1024, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'notifications')]
-    private Collection $recipients;
+    #[ORM\OneToMany(mappedBy: 'notification', targetEntity: UserNotification::class)]
+    private Collection $userNotifications;
 
     public function __construct()
     {
-        $this->recipients = new ArrayCollection();
+        $this->userNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,27 +119,27 @@ class Notification
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, >
      */
-    public function getRecipients(): Collection
+    public function getUserNotifications(): Collection
     {
-        return $this->recipients;
+        return $this->userNotifications;
     }
 
-    public function addRecipient(User $recipient): self
+    public function addUserNotification(UserNotification $userNotification): self
     {
-        if (!$this->recipients->contains($recipient)) {
-            $this->recipients->add($recipient);
-            $recipient->addNotification($this);
+        if (!$this->userNotifications->contains($userNotification)) {
+            $this->userNotifications->add($userNotification);
+            $userNotification->getUser()->addUserNotifications($userNotification);
         }
 
         return $this;
     }
 
-    public function removeRecipient(User $recipient): self
+    public function removeUserNotification(UserNotification $userNotification): self
     {
-        if ($this->recipients->removeElement($recipient)) {
-            $recipient->removeNotification($this);
+        if ($this->userNotifications->removeElement($userNotification)) {
+            $userNotification->getUser()->removeUserNotifications($userNotification);
         }
 
         return $this;

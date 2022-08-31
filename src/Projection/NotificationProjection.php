@@ -14,7 +14,6 @@ class NotificationProjection {
     public string $type;
     public NotificationContentProjection $content;
     public DateTimeInterface $emissionDate;
-    public ?DateTimeInterface $expirationDate;
     public ?NotificationAuthorProjection $author;
     public ?string $description;
 
@@ -24,7 +23,6 @@ class NotificationProjection {
         $notificationProjection->type = NotificationType::from($notification->getType())->name;
         $notificationProjection->content = NotificationContentProjection::fromContent($notification->getContent());
         $notificationProjection->emissionDate = $notification->getEmissionDate();
-        $notificationProjection->expirationDate = $notification->getExpirationDate();
         $notificationProjection->author = $notification->getAuthor() ? NotificationAuthorProjection::fromAuthor($notification->getAuthor()) : null;
         $notificationProjection->description = $notification->getDescription();
         return $notificationProjection;
@@ -33,7 +31,7 @@ class NotificationProjection {
     public static function fromNotifications(Collection $notifications): Collection {
         $notificationsProjection = new ArrayCollection();
         foreach($notifications as $notification) {
-            $notificationsProjection->add(NotificationProjection::fromNotification($notification));
+            $notificationsProjection->add(NotificationProjection::fromNotification($notification->getNotification()));
         }
         return $notificationsProjection;
     }

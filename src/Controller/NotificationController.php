@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Projection\NotificationProjection;
+use App\Projection\NotificationResponseProjection;
 use Exception;
 use App\Service\NotificationService;
 use JMS\Serializer\SerializerInterface;
@@ -28,7 +29,10 @@ class NotificationController extends AppController
         try {
             $page = $request->query->get('page') ? $request->query->get('page') : 1;
             $notifications = $this->notificationService->getNotificationsForUser($userId, $page);
-            return $this->ok(NotificationProjection::fromNotifications($notifications));
+            return $this->ok(NotificationResponseProjection::fromNotifications(
+                $this->notificationService->getNumberOfNotificationsForUser($userId),
+                $this->notificationService->getNumberOfUnreadNotificationsForUser($userId),
+                NotificationProjection::fromNotifications($notifications)));
         }
         catch(Exception $err) {
             return $this->internalServerError($err->getMessage());

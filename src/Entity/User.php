@@ -21,12 +21,12 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
-    #[ORM\ManyToMany(targetEntity: Notification::class, inversedBy: 'recipients')]
-    private Collection $notifications;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserNotification::class)]
+    private Collection $userNotifications;
 
     public function __construct()
     {
-        $this->notifications = new ArrayCollection();
+        $this->userNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,25 +59,26 @@ class User
     }
 
     /**
-     * @return Collection<int, Notification>
+     * @return Collection<int, UserNotification>
      */
-    public function getNotifications(): Collection
+    public function getUserNotifications(): Collection
     {
-        return $this->notifications;
+        return $this->userNotifications;
     }
 
-    public function addNotification(Notification $notification): self
+    public function addUserNotifications(UserNotification $userNotification): self
     {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications->add($notification);
+        if (!$this->userNotifications->contains($userNotification)) {
+            $this->userNotifications->add($userNotification);
+            $userNotification->getUser()->addUserNotifications($userNotification);
         }
 
         return $this;
     }
 
-    public function removeNotification(Notification $notification): self
+    public function removeUserNotifications(UserNotification $userNotification): self
     {
-        $this->notifications->removeElement($notification);
+        $this->userNotifications->removeElement($userNotification);
 
         return $this;
     }

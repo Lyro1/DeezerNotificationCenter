@@ -33,6 +33,18 @@ abstract class NotifiableContent {
     public abstract function getNotificationLink(): string;
 
     /**
+     * Returns the title of the content
+     * @return string the title of the content
+     **/
+    public abstract function getTitle(): string;
+
+    /**
+     * Returns the artist of the content
+     * @return string the artist of the content
+     **/
+    public abstract function getArtist(): string;
+
+    /**
      * Returns the type of the content
      * @return string the type of the content
      **/

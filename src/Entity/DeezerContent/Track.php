@@ -44,7 +44,7 @@ class Track extends NotifiableContent
         return $this;
     }
 
-    public function getArtist(): ?string
+    public function getArtist(): string
     {
         return $this->artist;
     }
@@ -93,5 +93,10 @@ class Track extends NotifiableContent
     public function getContentType(): string
     {
         return 'track';
+    }
+
+    public function getTitle(): string
+    {
+        return $this->name;
     }
 }
