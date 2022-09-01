@@ -39,4 +39,18 @@ class NotificationController extends AppController
         }
 
     }
+
+    #[Route('/notifications/{userId}/read/{notificationId}')]
+    public function setNotificationAsRead(Request $request, int $userId, int $notificationId): Response {
+        try {
+            if ($this->notificationService->markNotificationAsReadByUser($userId, $notificationId)) {
+                return $this->ok();
+            }
+            return $this->notFound('Could not mark the notification as read.');
+
+        }
+        catch(Exception $err) {
+            return $this->internalServerError($err->getMessage());
+        }
+    }
 }
