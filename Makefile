@@ -48,7 +48,7 @@ run.prod: cache.clean
 	chmod -fR 777 var/cache || : && chmod -fR 777 var/log || :
 
 run.dev: cache.clean
-	APP_ENV=dev && symfony server:start --no-tls
+	APP_ENV=dev && symfony server:start
 
 run.prod.reset: clean prepare.prod run.prod
 

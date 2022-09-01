@@ -4,6 +4,8 @@ namespace App\DataFixtures;
 
 use App\Entity\NotifiableContent;
 use App\Entity\UserNotification;
+use App\Repository\DeezerContent\AlbumRepository;
+use App\Repository\DeezerContent\PodcastRepository;
 use App\Repository\DeezerContent\TrackRepository;
 use App\Repository\UserNotificationRepository;
 use DateTime;
@@ -21,48 +23,66 @@ class NotificationFixtures extends AppFixtures implements DependentFixtureInterf
     private UserNotificationRepository $userNotificationRepository;
     private NotificationRepository $notificationRepository;
     private TrackRepository $trackRepository;
+    private AlbumRepository $albumRepository;
+    private PodcastRepository $podcastRepository;
 
     public function __construct(UserRepository $userRepository,
                                 UserNotificationRepository $userNotificationRepository,
                                 NotificationRepository $notificationRepository,
-                                TrackRepository $trackRepository
+                                TrackRepository $trackRepository,
+                                AlbumRepository $albumRepository,
+                                PodcastRepository $podcastRepository
     ) {
         $this->userRepository = $userRepository;
         $this->userNotificationRepository = $userNotificationRepository;
         $this->notificationRepository = $notificationRepository;
         $this->trackRepository = $trackRepository;
+        $this->albumRepository = $albumRepository;
+        $this->podcastRepository = $podcastRepository;
     }
 
     public function load(ObjectManager $manager): void {
-        ini_set('memory_limit','512M');
-        for ($i = 0; $i < 1; $i++) {
-            $notification = $this->createNotification(
-                $manager,
-                NotificationType::new,
-                null,
-                $this->trackRepository->findOneBy(['name' => 'Love You Back']),
-                DateTime::createFromFormat('Y-m-d H:i:s', '2022-07-29 15:16:17'),
-                null,
-                "Découvrez le nouveau single de Madeon, le petit prince de l'électro 👑",
-                $this->userRepository->findAll()
-            );
-            $manager->persist($notification);
-            $this->notificationRepository->add($notification);
-        }
+
+        $notification = $this->createNotification(
+            $manager,
+            NotificationType::new,
+            null,
+            $this->trackRepository->findOneBy(['name' => 'Everything Goes On']),
+            DateTime::createFromFormat('Y-m-d H:i:s', '2022-07-18 15:16:17'),
+            null,
+            "Everything Goes On, la dernière collaboration entre Riot et Porter Robinson, est disponible !",
+            $this->userRepository->findAll()
+        );
+        $manager->persist($notification);
+        $this->notificationRepository->add($notification);
+
         $notification = $this->createNotification(
             $manager,
             NotificationType::new,
             null,
             $this->trackRepository->findOneBy(['name' => 'Love You Back']),
             DateTime::createFromFormat('Y-m-d H:i:s', '2022-07-29 15:16:17'),
-            DateTime::createFromFormat('Y-m-d H:i:s', '2022-07-30 15:16:17'),
+            DateTime::createFromFormat('Y-m-d H:i:s', '2022-09-30 15:16:17'),
             "Découvrez le nouveau single de Madeon, le petit prince de l'électro 👑",
             $this->userRepository->findAll()
         );
         $manager->persist($notification);
         $this->notificationRepository->add($notification);
-        $manager->flush();
 
+        $notification = $this->createNotification(
+            $manager,
+            NotificationType::shared_content,
+            $this->userRepository->findOneBy(['firstname' => 'Sebastian']),
+            $this->albumRepository->findOneBy(['title' => 'Ocean Eyes']),
+            DateTime::createFromFormat('Y-m-d H:i:s', '2022-07-18 15:16:17'),
+            null,
+            null,
+            [$this->userRepository->findOneBy(['firstname' => 'Lewis'])]
+        );
+        $manager->persist($notification);
+        $this->notificationRepository->add($notification);
+
+        $manager->flush();
     }
 
     private function createNotification(ObjectManager $manager,

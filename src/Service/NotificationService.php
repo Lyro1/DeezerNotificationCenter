@@ -77,7 +77,14 @@ class NotificationService {
      * @throws Exception
      */
     public function getNumberOfUnreadNotificationsForUser(int $userId): int {
-        return $this->getNumberOfNotificationsForUser($userId);
+        $user = $this->userRepository->findOneBy(['id' => $userId]);
+        if (!$user) {
+            throw new Exception("User with id ". $userId ." does not exist");
+        }
+        $unreadNotifications = $user->getUserNotifications()->filter(function ($userNotification) {
+           return $userNotification->getReadStatus() === false;
+        });
+        return count($unreadNotifications);
     }
 
     /**
@@ -111,7 +118,7 @@ class NotificationService {
      */
     private function getUserNotificationForUserAndNotification(int $notificationId, User $user): UserNotification {
         $userNotifications = $this->getFilteredNotificationsForUser($user);
-        $userNotifications->filter(function($userNotification) use ($notificationId) {
+        $userNotifications = $userNotifications->filter(function($userNotification) use ($notificationId) {
             return $userNotification->getNotification()->getId() === $notificationId;
         });
         if (count($userNotifications) != 1) {

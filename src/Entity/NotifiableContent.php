@@ -7,7 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\InheritanceType("SINGLE_TABLE")]
 #[ORM\DiscriminatorColumn('disc', 'string')]
-#[ORM\DiscriminatorMap(['notifiablecontent' => 'NotifiableContent', 'track' => 'App\Entity\DeezerContent\Track'])]
+#[ORM\DiscriminatorMap([
+    'notifiablecontent' => 'NotifiableContent',
+    'track' => 'App\Entity\DeezerContent\Track',
+    'album' => 'App\Entity\DeezerContent\Album',
+    'podcast' => 'App\Entity\DeezerContent\Podcast'])]
 abstract class NotifiableContent {
 
     #[ORM\Id]

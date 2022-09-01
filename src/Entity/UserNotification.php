@@ -49,7 +49,7 @@ class UserNotification
         return $this;
     }
 
-    public function isReadStatus(): ?bool
+    public function getReadStatus(): ?bool
     {
         return $this->readStatus;
     }
