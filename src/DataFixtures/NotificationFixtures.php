@@ -61,7 +61,7 @@ class NotificationFixtures extends AppFixtures implements DependentFixtureInterf
             NotificationType::new,
             null,
             $this->trackRepository->findOneBy(['name' => 'Love You Back']),
-            DateTime::createFromFormat('Y-m-d H:i:s', '2022-07-29 15:16:17'),
+            DateTime::createFromFormat('Y-m-d H:i:s', '2022-09-03 15:16:17'),
             DateTime::createFromFormat('Y-m-d H:i:s', '2022-09-30 15:16:17'),
             "Découvrez le nouveau single de Madeon, le petit prince de l'électro 👑",
             $this->userRepository->findAll()

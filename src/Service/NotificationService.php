@@ -50,8 +50,10 @@ class NotificationService {
      */
     private function getFilteredNotificationsForUser(User $user): Collection {
         return $user->getUserNotifications()->filter(function($userNotification) {
-            return !$userNotification->getNotification()->getExpirationDate() ||
-                $userNotification->getNotification()->getExpirationDate() > new DateTime();
+            return
+                $userNotification->getNotification()->getEmissionDate() < new DateTime() &&
+                (!$userNotification->getNotification()->getExpirationDate() ||
+                $userNotification->getNotification()->getExpirationDate() > new DateTime());
         });
     }
 
@@ -82,7 +84,8 @@ class NotificationService {
             throw new Exception("User with id ". $userId ." does not exist");
         }
         $unreadNotifications = $user->getUserNotifications()->filter(function ($userNotification) {
-           return $userNotification->getReadStatus() === false;
+           return $userNotification->getNotification()->getEmissionDate() < new DateTime() &&
+               $userNotification->getReadStatus() === false;
         });
         return count($unreadNotifications);
     }
