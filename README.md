@@ -12,6 +12,7 @@ The Makefile provides all commands needed to make sure the project can run.
 - Go in the .env file and setup your MySQL instance to be able to generate the database.
 - Go to the route folder, and just run 
 ```
+make package.install
 make db.up
 make fixture.load
 make run.dev
