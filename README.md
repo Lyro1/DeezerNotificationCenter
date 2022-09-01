@@ -14,7 +14,6 @@ The Makefile provides all commands needed to make sure the project can run.
 ```
 make package.install
 make db.up
-make fixture.load
 make run.dev
 ```
 
